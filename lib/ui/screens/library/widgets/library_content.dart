@@ -49,7 +49,14 @@ class LibraryContent extends StatelessWidget {
           Text("Library", style: AppTextStyles.heading),
           SizedBox(height: 50),
 
-          Expanded(child: content),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                mv.fetchSong(forceFetch: true);
+              },
+              child: content,
+            ),
+          ),
         ],
       ),
     );

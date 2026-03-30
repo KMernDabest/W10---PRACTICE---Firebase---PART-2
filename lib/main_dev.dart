@@ -8,6 +8,8 @@ import 'data/repositories/settings/app_settings_repository_mock.dart';
 import 'data/repositories/songs/song_repository.dart';
 import 'ui/states/player_state.dart';
 import 'ui/states/settings_state.dart';
+import 'ui/screens/artists/view_model/artists_view_model.dart';
+import 'ui/screens/library/view_model/library_view_model.dart';
 
 /// Configure provider dependencies for dev environment
 List<InheritedProvider> get devProviders {
@@ -25,6 +27,20 @@ List<InheritedProvider> get devProviders {
     // 3 - Inject the  app setting state
     ChangeNotifierProvider<AppSettingsState>(
       create: (_) => AppSettingsState(repository: appSettingsRepository),
+    ),
+
+    ChangeNotifierProvider<LibraryViewModel>(
+      create: (context) => LibraryViewModel(
+        songRepository: context.read<SongRepository>(),
+        artistRepository: context.read<ArtistRepository>(),
+        playerState: context.read<PlayerState>(),
+      ),
+    ),
+
+    ChangeNotifierProvider<ArtistsViewModel>(
+      create: (context) => ArtistsViewModel(
+        artistRepository: context.read<ArtistRepository>(),
+      ),
     ),
   ];
 }
