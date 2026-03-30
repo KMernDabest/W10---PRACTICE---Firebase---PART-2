@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
- 
+
 import '../../../../model/artist/artist.dart';
 import '../../../theme/theme.dart';
 import '../../../utils/async_value.dart';
 import '../../../widgets/song/artist_tile.dart';
+import '../../artist_detail/artist_detail_screen.dart';
 import '../view_model/artists_view_model.dart';
 
 class ArtistsContent extends StatelessWidget {
@@ -34,7 +35,17 @@ class ArtistsContent extends StatelessWidget {
         List<Artist> artists = asyncValue.data!;
         content = ListView.builder(
           itemCount: artists.length,
-          itemBuilder: (context, index) => ArtistTile(artist: artists[index]),
+          itemBuilder: (context, index) => ArtistTile(
+            artist: artists[index],
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ArtistDetailScreen(artist: artists[index]),
+                ),
+              );
+            },
+          ),
         );
     }
 

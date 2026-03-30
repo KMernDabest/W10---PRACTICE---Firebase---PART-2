@@ -14,4 +14,11 @@ class AsyncValue<T> {
 
   factory AsyncValue.error(Object error) =>
       AsyncValue._(error: error, state: AsyncValueState.error);
+
+  AsyncValue<T> whenData(T Function(T data) update) {
+    if (state == AsyncValueState.success && data != null) {
+      return AsyncValue.success(update(data as T));
+    }
+    return this;
+  }
 }
