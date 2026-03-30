@@ -8,7 +8,7 @@ import 'artist_repository.dart';
 
 class ArtistRepositoryFirebase implements ArtistRepository {
   final Uri artistsUri = Uri.https(
-    'test-a2a77-default-rtdb.asia-southeast1.firebasedatabase.app',
+    'flutter-lab-6dcc4-default-rtdb.asia-southeast1.firebasedatabase.app',
     '/artists.json',
   );
 

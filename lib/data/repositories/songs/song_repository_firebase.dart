@@ -8,7 +8,7 @@ import 'song_repository.dart';
 
 class SongRepositoryFirebase extends SongRepository {
   final Uri songsUri = Uri.https(
-    'test-a2a77-default-rtdb.asia-southeast1.firebasedatabase.app',
+    'flutter-lab-6dcc4-default-rtdb.asia-southeast1.firebasedatabase.app',
     '/songs.json',
   );
 
@@ -33,4 +33,35 @@ class SongRepositoryFirebase extends SongRepository {
 
   @override
   Future<Song?> fetchSongById(String id) async {}
+
+  @override
+  Future<Song> likeSong(String songId) async {
+    // 1- Fetch the current song to get latest likes count
+    final getUri = Uri.https(
+      'flutter-lab-6dcc4-default-rtdb.asia-southeast1.firebasedatabase.app',
+      '/songs/$songId.json',
+    );
+    final getResponse = await http.get(getUri);
+    if (getResponse.statusCode != 200) {
+      throw Exception('Failed to fetch song ($songId)');
+    }
+    final Map<String, dynamic> songJson = json.decode(getResponse.body);
+    final int currentLikes = songJson[SongDto.likesKey] as int? ?? 0;
+
+    // 2- PATCH with incremented likes
+    final patchResponse = await http.patch(
+      getUri,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({SongDto.likesKey: currentLikes + 1}),
+    );
+    if (patchResponse.statusCode != 200) {
+      throw Exception('Failed to update likes (${patchResponse.statusCode})');
+    }
+
+    // 3- Return the updated Song
+    return SongDto.fromJson(songId, {
+      ...songJson,
+      SongDto.likesKey: currentLikes + 1,
+    });
+  }
 }
